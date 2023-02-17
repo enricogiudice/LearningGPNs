@@ -1,17 +1,12 @@
 library(BiDAG)
 library(matrixStats)
 
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Fourier_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/BayesStanFns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/sampling_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/comparison_algs.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/dualPC.R")
-insertSource("~/Downloads/Nonlinear scoring/Structure Learning/GPscore.R", package = "BiDAG")
-#source("Fourier_fns.R")
-#source("BayesStanFns.R")
-#source("sampling_fns.R")
-#source("comparison_algs.R")
-#insertSource("GPscore.R", package = "BiDAG")
+source("Fourier_fns.R")
+source("BayesStanFns.R")
+source("sampling_fns.R")
+source("comparison_algs.R")
+source("dualPC.R")
+insertSource("GPscore.R", package = "BiDAG")
 
 init.seed <- 100
 iter <- 100  # number of simulations
@@ -23,7 +18,7 @@ results <- data.frame()
 
 # Parameters for ROC curves
 bge.mus <- c(0.01, 0.1, 0.5, 2, 5)
-gp.pars <- c(0.1, 0.5, 1, 10, 100)  # 0.1 is very slow
+gp.pars <- c(0.1, 0.5, 1, 10, 100) 
 dib.pars <- c(1, 1.25, 1.5, 1.75, 2)
 pc.pars <- c(0.004, 0.01, 0.05, 0.12, 0.3)
 
@@ -87,7 +82,3 @@ for(lambda in lambdas) {
 }
 colnames(results) <- c("ESHD", "TPR", "FPRn", "parameter", "Scorefn", "Lambda")
 saveRDS(results, "Sims_Results.rds")
-
-# filename <- file.choose()
-# results <- readRDS(filename)
-
