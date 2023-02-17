@@ -1,13 +1,13 @@
 library(BiDAG)
 library(matrixStats)
 
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/BayesStanFns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/sampling_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/comparison_algs.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/dualPC.R")
-insertSource("~/Downloads/Nonlinear scoring/Structure Learning/GPscore.R", package = "BiDAG")
-sachs.all <- read.delim("~/Downloads/Nonlinear scoring/Structure Learning/sachs_allexps.csv")
-trueDAGbn <- readRDS("~/Downloads/Nonlinear scoring/Structure Learning/sachs_graph.rds")
+source("BayesStanFns.R")
+source("sampling_fns.R")
+source("comparison_algs.R")
+source("dualPC.R")
+insertSource("GPscore.R", package = "BiDAG")
+sachs.all <- read.delim("sachs_allexps.csv")
+trueDAGbn <- readRDS("sachs_graph.rds")
 set.seed(101)
 results <- data.frame()
 exp_num <- 1
@@ -66,6 +66,3 @@ results <- rbind(results, c(as.character(kPC.hsic.comp), kPC.hsic.edgep, "kPC-HS
 colnames(results) <- c("ESHD", "ETP", "EFP", "TPR(MAP)", "FPRp(MAP)",
                        "ErktoAkt", "ErktoPKA", "Scorefn", "Experiment")
 saveRDS(results, "Sachs_results.rds")
-
-
-
