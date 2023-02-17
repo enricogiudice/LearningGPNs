@@ -1,8 +1,7 @@
 library(tidyverse)
 library(ggpubr)
 
-filename <- file.choose()
-results <- as.data.frame(readRDS(filename))
+source("Results/Sims_Results.rds")
 
 all_methods <- c("GP, partition", "GP, order", "BGe, partition", "BGe, order", "DiBS+", "kPC-HSIC", "kPC-DC")
 some_methods <- c("GP, order", "BGe, order",  "kPC-HSIC", "kPC-DC")
@@ -63,23 +62,3 @@ for(i in 1:length(lambdas)) {
 ggarrange(shdplots[[1]], shdplots[[2]], shdplots[[3]], 
           ncol = 3, common.legend = T, legend = "bottom")
 ggarrange(rocplots[[1]], rocplots[[2]], rocplots[[3]], ncol = 3, common.legend = T, legend = "bottom")
-
-# size = 9 x 3.7
-
-
-
-# Parallel results
-results1 <- as.data.frame(`PCResults_1`)
-results2 <- as.data.frame(`PCResults_2`)
-results3 <- as.data.frame(`PCResults_3`)
-results4 <- as.data.frame(`PCResults_4`)
-results5 <- as.data.frame(`PCResults_5`)
-
-results <- rbind(results1,results2,results3,results4,results5)
-saveRDS(results, "DualResults.rds")
-
-
-
-
-
-
