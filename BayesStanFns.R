@@ -3,8 +3,8 @@ library(bridgesampling)
 options(mc.cores = parallel::detectCores())
 
 # Compile stan files
-Gauss_mod <- stan_model("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Gauss.stan") 
-GP_mod <- stan_model("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Add.stan") 
+Gauss_mod <- stan_model("Gauss.stan") 
+GP_mod <- stan_model("Add.stan") 
 
 # Laplace approximation of log marginal likelihood
 Laplace <- function(optim) {
@@ -49,4 +49,3 @@ GP.mcmc <- function(y, X) {
                       iter = 500, warmup = 200, chains = 1, refresh = 0)
   bridge_sampler(stanfit, silent = TRUE)$logml
 }
-
