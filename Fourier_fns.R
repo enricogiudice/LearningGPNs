@@ -4,14 +4,14 @@
 Fou_trans <- function(x, lambda, concentration, n_Four = 6){
   
   n_Four <- min(n_Four, 10) # check we don't have too many
-  n_Four <- max(n_Four, 2) # or too few!
+  n_Four <- max(n_Four, 2) # or too few
   
   concentration <- max(concentration, 1e-3) # check it remains positive
   
   # store the multiples of x
   x_mults <- matrix(rep(x, each = n_Four)*(1:n_Four), nrow = n_Four)
   
-  # compute the weights for the frequencies (we have most twice)
+  # compute the weights for the frequencies
   if(lambda == 0) {
     freq_weights <- c(1, rep(0, n_Four, each = 2))
   }
