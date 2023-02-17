@@ -1,7 +1,7 @@
 library(tidyverse)
 library(ggpubr)
 
-source("Results/Sims_Results.rds")
+readRDS("Results/Sims_Results.rds")
 
 all_methods <- c("GP, partition", "GP, order", "BGe, partition", "BGe, order", "DiBS+", "kPC-HSIC", "kPC-DC")
 some_methods <- c("GP, order", "BGe, order",  "kPC-HSIC", "kPC-DC")
