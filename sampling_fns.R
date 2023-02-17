@@ -1,3 +1,4 @@
+# Implements the GP and BGe score-based order & partition mcmc
 set.searchspace <- function(data, dual, method, par = 1) {
   startspace <- NULL
   
