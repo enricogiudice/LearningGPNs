@@ -1,3 +1,4 @@
+#
 library(kpcalg)
 
 kPC.dcc.boot <- function(data, nboots = 50, alpha = 0.1) {  # k-PC with distance correlation
@@ -38,9 +39,8 @@ kPC.hsic.boot <- function(data, nboots = 50, alpha = 0.1) {  # k-PC with hsic
 
 DiBS <- function(data, n_particles = 1, p = 1) {  
   n <- ncol(data)
-  n_edges_per_node <- p  
   str_data <- paste(signif(data, 5), collapse = ",")  # convert to strings
-  py.args <- paste(str_data, n, n_particles, n_edges_per_node)
+  py.args <- paste(str_data, n, n_particles, p)
   
   path <- NULL  # to run on server
   path <- 'cd "/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning";'
