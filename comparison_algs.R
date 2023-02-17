@@ -1,4 +1,3 @@
-#
 library(kpcalg)
 
 kPC.dcc.boot <- function(data, nboots = 50, alpha = 0.1) {  # k-PC with distance correlation
