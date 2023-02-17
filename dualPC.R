@@ -1,3 +1,4 @@
+# These functions implement the dual PC for the initial search space
 # This function inverts a matrix and puts the inverse in correlation form
 psolve <- function(M) {
   M1 <- solve(M) # should use pseudoinverse
@@ -59,22 +60,6 @@ Compute_rho <- function(M) {
   local_mat <- M[1:2, 1:2] - t(x_mat) %*% x_mat
   rho <- local_mat[1, 2]/sqrt(local_mat[1, 1]*local_mat[2, 2])
   rho
-}
-
-# Compare estimated cpdag, skeleton and pattern graph to truth
-compare_results <- function(cpdag, setup_vec, method_vec, result_df, trueCPDAG, trueskel, truepatt) {
-  method_vec[4] <- "cpdag"
-  result_cpdag <- compareGs(cpdag, trueCPDAG)
-  result_df <- rbind(result_df, data.frame(t(c(setup_vec, method_vec, result_cpdag))))
-  method_vec[4] <- "skeleton"  # Compare skeleton
-  skel <- Gskel(cpdag)
-  result_skel <- compareGs(skel, trueskel)
-  result_df <- rbind(result_df, data.frame(t(c(setup_vec, method_vec, result_skel))))
-  method_vec[4] <- "pattern"  # Compare pattern graph
-  patt <- pdag2pattern(cpdag)
-  result_patt <- compareGs(patt, truepatt)
-  result_df <- rbind(result_df, data.frame(t(c(setup_vec, method_vec, result_patt))))
-  return(result_df)
 }
 
 # Convert a cpdag to a pattern graph
@@ -354,95 +339,6 @@ dual_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, pattern
     G_cur
   } else {
     orient_vstructures(G_cur, sepsets, pres_sepsets, pattern_graph)
-  }
-  
-}
-
-
-own_pc <- function(cor_mat, N, alpha, ord_ind = TRUE, skeleton = FALSE, prec = FALSE, max_ord = NULL) {
-  n <- ncol(cor_mat) # number of variables
-  N <- nrow(data) # number of observations
-  if (is.null(max_ord)) { # the maximum subset size to test
-    max_ord <- n
-  }
-  T_c <- abs(qnorm(alpha/2)) # p-value cut-off in z-space for normal tests
-  c_mat <- cor_mat # local correlation matrix 
-  ord <- 0 # first level is correlation/precision matrix
-  # T statistics on correlation space
-  # keep edges which are significant, ie delete those which aren't
-  Gc_0 <- Fztest(cor_mat*upper.tri(c_mat), N, T_c)
-  G_cur <- 1*(Gc_0 | t(Gc_0)) # current graph
-  pres_sepsets <- matrix(T, ncol = n, nrow = n)
-  if (prec) { # also look at precision matrix
-    # precision matrix
-    p_mat <- psolve(c_mat)
-    # T statistics on precision space
-    Gp_0 <- Fztest(p_mat*upper.tri(p_mat), N-n, T_c)
-    # keep track of sepsets of precision matrix
-    pres_sepsets <- Gp_0 | t(Gp_0)
-    # combined 
-    G_0 <- (Gc_0 & Gp_0)*upper.tri(Gc_0)
-    G_cur <- 1*(G_0 | t(G_0)) # current graph
-  }
-  if (ord_ind) { # to track the edges we need to delete
-    del_mat <- matrix(1, n, n)
-  }
-  if (skeleton == FALSE) { # so we work out directions
-    sepsets <- as.list(rep(NA, n*n))
-    dim(sepsets) <- c(n, n) # this will record separating sets
-  }
-  done_flag <- FALSE
-  while (ord < max_ord && done_flag == FALSE) { # keep track of order
-    done_flag <- TRUE
-    ord <- ord + 1
-    edges <- which(G_cur == 1, arr.ind = TRUE)
-    for (ii in 1:nrow(edges)) {
-      x <- edges[ii, 1]
-      y <- edges[ii, 2]
-      S <- Find_Nbhd(G_cur, x, y)
-      nbhd_size <- length(S)
-      if (ord <= nbhd_size) {
-        c_mat <- cor_mat[c(x, y, S), c(x, y, S)]
-        test_flag <- FALSE
-        n_subsets <- choose(nbhd_size, ord)
-        # and we need another round
-        done_flag <- FALSE
-        jj <- 0
-        while (jj < n_subsets && test_flag == FALSE) {
-          jj <- jj + 1 # loop
-          if (jj == 1) {
-            subset <- 1:ord
-          } else {
-            subset <- nextSubS(subset, nbhd_size)
-          }
-          cond_set <- subset + 2 # which rows/columns to condition on
-          # normal test
-          rho <- Compute_rho(c_mat[c(1, 2, cond_set), c(1, 2, cond_set)])
-          if (Fztest(rho, N-ord, T_c) == 0) { # delete edge
-            test_flag <- TRUE
-            if (ord_ind) { # we only delete at the end of each main loop
-              del_mat[x, y] <- 0
-              del_mat[y, x] <- 0
-            } else {
-              G_cur[x, y] <- 0 # delete edges
-              G_cur[y, x] <- 0
-            }
-            if (skeleton == FALSE) { # record separating subsets
-              sepsets[[x, y]] <- S[subset]
-              sepsets[[y, x]] <- S[subset]
-            }
-          }
-        }
-      }
-    }
-    if (ord_ind) { # we delete edges now instead
-      G_cur <- 1*(G_cur & del_mat)
-    }
-  }
-  if (skeleton) {
-    G_cur
-  } else {
-    orient_vstructures(G_cur, sepsets, pres_sepsets, pattern_graph = FALSE)
   }
   
 }
