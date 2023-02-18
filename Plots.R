@@ -1,9 +1,10 @@
 library(tidyverse)
 library(ggpubr)
 
-readRDS("Results/Sims_Results.rds")
+filename <- file.choose()
+results <- as.data.frame(readRDS(filename))
 
-all_methods <- c("GP, partition", "GP, order", "BGe, partition", "BGe, order", "DiBS+", "kPC-HSIC", "kPC-DC")
+all_methods <- c("GP, partition", "GP, order", "BGe, partition", "BGe, order", "kPC-HSIC", "kPC-DC", "DiBS+")
 some_methods <- c("GP, order", "BGe, order",  "kPC-HSIC", "kPC-DC")
 results  <- mutate(results, 
                    ESHD = as.numeric(ESHD),
@@ -32,11 +33,11 @@ for(i in 1:length(lambdas)) {
               aes(x = FPRp, y = TPR, color = method), alpha = 0.15, size = 0.5, shape = 20) + 
     geom_path(data = summarised_results %>% 
                 filter(method %in% some_methods), 
-              aes(x = FPRp, y = TPR, colour = method), size = 0.5) +
+              aes(x = FPRp, y = TPR, colour = method), size = 0.6) +
     ggtitle(bquote(lambda ~ "=" ~ .(lambdas[i]))) +
   coord_fixed(ratio = 1, xlim = c(0, 0.45), ylim = c(0.45, 1), expand = FALSE) +  # try unfixing the ratio
     theme(plot.title = element_text(hjust = 0.5)) +
-  scale_color_manual(values=c("#b69f58", "#58b678", "#5878b6", "#b358b6"))
+  scale_color_manual(values=c("#b69f58", "#58b678", "#58adb6", "#5878b6"))
   
   
   # ESHD plots
@@ -62,3 +63,23 @@ for(i in 1:length(lambdas)) {
 ggarrange(shdplots[[1]], shdplots[[2]], shdplots[[3]], 
           ncol = 3, common.legend = T, legend = "bottom")
 ggarrange(rocplots[[1]], rocplots[[2]], rocplots[[3]], ncol = 3, common.legend = T, legend = "bottom")
+
+# size = 9 x 3.7
+
+
+
+# Parallel results
+results1 <- as.data.frame(`PCResults_1`)
+results2 <- as.data.frame(`PCResults_2`)
+results3 <- as.data.frame(`PCResults_3`)
+results4 <- as.data.frame(`PCResults_4`)
+results5 <- as.data.frame(`PCResults_5`)
+
+results <- rbind(results1,results2,results3,results4,results5)
+saveRDS(results, "DualResults.rds")
+
+
+
+
+
+
