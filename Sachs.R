@@ -65,4 +65,4 @@ results <- rbind(results, c(as.character(kPC.hsic.comp), kPC.hsic.edgep, "kPC-HS
 
 colnames(results) <- c("ESHD", "ETP", "EFP", "TPR(MAP)", "FPRp(MAP)",
                        "ErktoAkt", "ErktoPKA", "Scorefn", "Experiment")
-saveRDS(results, "Sachs_results.rds")
+saveRDS(results, "Results/Sachs_results.rds")
