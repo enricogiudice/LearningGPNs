@@ -1,9 +1,16 @@
-dualPC.R contains the R code for the main functions.
+sampling_fns.R contains the main functions for BGe & GP score-based structure learning.
 
-dualPC_sim.R contains an example run with the different PC versions;
-it calls dualPC_algs.R which contains the individual runs.
+GP_sims.R contains the code for running the simulations comparing the GP score-based approach to all others (Figures 1 & 2)
 
-DAGfns.R contains functions for generating data and comparing the results.
+score_equivalence.R generates Figure 3.
 
-sims_collated/ contains the collected data from the simulations;
-plots/ contains the generated plots and the code used to create them.
+The .Stan files contain the the Gaussian, GP & GP^2 models.
+
+Sachs.R generates the data for Table 1.
+
+comparison_algs.R contains functions for k_PC, DiBS+ and comparing the results.
+
+Fourier_fns.R contains functions to generate data according to Equation (15).
+
+Results/ contains the collected data from the GP_sims.R and Sachs.R;
+Plots/ contains the generated plots and the code used to create them.
