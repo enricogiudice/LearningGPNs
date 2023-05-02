@@ -1,6 +1,6 @@
 sampling_fns.R contains the main functions for BGe & GP score-based structure learning.
 
-GP_sims.R contains the code for running the simulations comparing the GP score-based approach to all others (Figures 1 & 2)
+GP_sims.R contains the code for running the main simulation study (the data for Figures 1 & 2).
 
 score_equivalence.R generates Figure 3.
 
