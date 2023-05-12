@@ -53,8 +53,6 @@ for(l in lambdas) {
     results <- rbind(results, c(scorediff, l))
   }
 }
-saveRDS(results, "Scorequi_results.rds")
-
 
 # Plot results
 colnames(results) <- c("Scorediff", "lambda")
