@@ -18,6 +18,3 @@ posterior.R generates Figure 2.
 sampling_fns.R contains the main functions for BGe & GP score-based structure learning.
 
 score_equivalence.R generates Figure A1.
-
-
-
