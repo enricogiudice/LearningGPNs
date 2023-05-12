@@ -1,8 +1,7 @@
 library(tidyverse)
 library(ggpubr)
 
-filename <- file.choose()
-results <- as.data.frame(readRDS(filename))
+results <- as.data.frame(readRDS(Sims_results.rds))
 
 all_methods <- c("GP, partition", "GP, order", "BGe, partition", "BGe, order", "kPC-HSIC", "kPC-DC", "DiBS+")
 some_methods <- c("GP, order", "BGe, order",  "kPC-HSIC", "kPC-DC")
