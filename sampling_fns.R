@@ -29,7 +29,6 @@ GP.partition.mcmc <- function(data, searchspace, alpha = 0.05,
   start <- Sys.time()
   n <- ncol(data)
   myScore <- searchspace$score
-  #print("Start MCMC")
   if(order) {
     fit <- orderMCMC(myScore, MAP = FALSE, chainout = TRUE, alpha = alpha, 
                      startorder = searchspace$maxorder, scoretable = searchspace$scoretable, 
@@ -40,7 +39,6 @@ GP.partition.mcmc <- function(data, searchspace, alpha = 0.05,
                         scoretable = searchspace$scoretable, startspace = searchspace$endspace,
                         iterations = iterations, stepsave = 4)
   }
-  #print("Finish MCMC")
   inter <- Sys.time()
   # Make list of sampled parents for each variable
   parent.scores <- data.frame(sets = character(0), newscore = character(0))  
@@ -79,7 +77,6 @@ GP.partition.mcmc <- function(data, searchspace, alpha = 0.05,
       curr_score <- curr_score + loc_score  # build score
     }
     weights[k] <- curr_score - fit$trace[k]   # weight for current DAG 
-    #cat(k*100/ndags, "%\n")
   }
   
   fit$weights <- weights - logSumExp(weights)  # normalize weights
@@ -120,7 +117,6 @@ GP.partition.inter <- function(data, dual, order = F, par = 1) {
   
   start <- Sys.time()
   GP.searchspace = set.searchspace(data, dual, "GP", par = par)
-  print("Done searchspace")
   gp.fit <-  GP.partition.mcmc(data, GP.searchspace, order = order, iterations = 1200)
   time <- Sys.time() - start
   gp.fit$time <- as.numeric(time, units = "secs")
