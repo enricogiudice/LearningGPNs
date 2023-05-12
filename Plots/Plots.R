@@ -89,21 +89,3 @@ ggarrange(timeplots[[1]], timeplots[[2]], timeplots[[3]],
           legend.grob = time_leg, ncol = 3, common.legend = T, legend = "bottom")
 
 # size = 9 x 3.6
-
-
-
-# Parallel results
-filename <- file.choose()
-results <- rbind(results, as.data.frame(readRDS(filename)))
-
-results1 <- as.data.frame(`PCResults_1`)
-results2 <- as.data.frame(`PCResults_2`)
-results3 <- as.data.frame(`PCResults_3`)
-results4 <- as.data.frame(`PCResults_4`)
-results5 <- as.data.frame(`PCResults_5`)
-
-results <- rbind(results1,results2,results3,results4,results5)
-saveRDS(results, "DualResults.rds")
-
-
-
