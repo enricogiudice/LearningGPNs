@@ -1,4 +1,3 @@
-# These functions implement the dual PC for the initial search space
 # This function inverts a matrix and puts the inverse in correlation form
 psolve <- function(M) {
   M1 <- solve(M) # should use pseudoinverse
@@ -66,14 +65,17 @@ Compute_rho <- function(M) {
 pdag2pattern <- function(G) {
   pattern_graph <- matrix(0, nrow(G), ncol(G))
   ind <- which(G == 1, arr.ind = TRUE)
-  for (i in 1:nrow(ind)) {
-    x <- ind[i, 1]
-    y <- ind[i, 2]
-    allZ <- setdiff(which(G[ ,y] == 1), x)  # nodes directed towards y excluding x
-    for (z in allZ) {
-      if(G[y,x] == 0 && G[y,z] == 0 && G[x,z] == 0 && G[z,x] == 0) {
-        pattern_graph[x,y] <- pattern_graph[z,y] <- 1  # save v-structure x -> y <- z
-        G[x,y] <- G[z,y] <- 0  # delete v-structure from old pdag
+  
+  if(length(ind) != 0) {
+    for (i in 1:nrow(ind)) {
+      x <- ind[i, 1]
+      y <- ind[i, 2]
+      allZ <- setdiff(which(G[ ,y] == 1), x)  # nodes directed towards y excluding x
+      for (z in allZ) {
+        if(G[y,x] == 0 && G[y,z] == 0 && G[x,z] == 0 && G[z,x] == 0) {
+          pattern_graph[x,y] <- pattern_graph[z,y] <- 1  # save v-structure x -> y <- z
+          G[x,y] <- G[z,y] <- 0  # delete v-structure from old pdag
+        }
       }
     }
   }

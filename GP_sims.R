@@ -1,12 +1,12 @@
 library(BiDAG)
 library(matrixStats)
 
-source("Fourier_fns.R")
-source("BayesStanFns.R")
-source("sampling_fns.R")
-source("comparison_algs.R")
-source("dualPC.R")
-insertSource("GPscore.R", package = "BiDAG")
+source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Fourier_fns.R")
+source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/BayesStanFns.R")
+source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/sampling_fns.R")
+source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/comparison_algs.R")
+source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/dualPC.R")
+insertSource("~/Downloads/Nonlinear scoring/Structure Learning/GPscore.R", package = "BiDAG")
 
 init.seed <- 100
 iter <- 100  # number of simulations
@@ -18,7 +18,7 @@ results <- data.frame()
 
 # Parameters for ROC curves
 bge.mus <- c(0.01, 0.1, 0.5, 2, 5)
-gp.pars <- c(0.1, 0.5, 1, 10, 100) 
+gp.pars <- c(0.1, 0.5, 1, 10, 100)  # 0.1 is very slow
 dib.pars <- c(1, 1.25, 1.5, 1.75, 2)
 pc.pars <- c(0.004, 0.01, 0.05, 0.12, 0.3)
 
@@ -45,40 +45,50 @@ for(lambda in lambdas) {
       
       # Bge score, partition
       bge.fit <- bge.partition.mcmc(bge.searchspace, order = F)
-      bge.comp <- compareGraphs(bge.fit, truegraph)
-      results <- rbind(results, c(as.character(bge.comp), bge.par, "BGe, partition", lambda))
+      results <- compare_results(bge.fit, c(bge.par, "BGe, partition", lambda), results, truegraph)
       
       # Bge score, order
       bge.fit <- bge.partition.mcmc(bge.searchspace, order = T)
-      bge.comp <- compareGraphs(bge.fit, truegraph)
-      results <- rbind(results, c(as.character(bge.comp), bge.par, "BGe, order", lambda))
+      results <- compare_results(bge.fit, c(bge.par, "BGe, order", lambda), results, truegraph)
       
       # GP score, partition
-      gp.fit <- GP.partition.mcmc(data, GP.searchspace, order = F)
-      gp.comp <- compareGraphs(gp.fit, truegraph)
-      results <- rbind(results, c(as.character(gp.comp), gp.par, "GP, partition", lambda))
+      gp.ofit <- GP.partition.mcmc(data, GP.searchspace, order = F)
+      results <- compare_results(gp.ofit, c(gp.par, "GP, partition", lambda), results, truegraph)
+      
+      # Laplace score, partition
+      gp.ofit$weights <- NULL
+      gp.ofit$time <- gp.ofit$time - gp.ofit$time2
+      results <- compare_results(gp.ofit, c(gp.par, "Laplace, partition", lambda), results, truegraph)
       
       # GP score, order
-      gp.fit <- GP.partition.mcmc(data, GP.searchspace, order = T)
-      gp.comp <- compareGraphs(gp.fit, truegraph)
-      results <- rbind(results, c(as.character(gp.comp), gp.par, "GP, order", lambda))
+      gp.pfit <- GP.partition.mcmc(data, GP.searchspace, order = T)
+      results <- compare_results(gp.pfit, c(gp.par, "GP, order", lambda), results, truegraph)
+      
+      # Laplace score, order
+      gp.pfit$weights <- NULL
+      gp.pfit$time <- gp.pfit$time - gp.pfit$time2
+      results <- compare_results(gp.pfit, c(gp.par, "Laplace, order", lambda), results, truegraph)
       
       # DIBS+
-      dib.fit <- DiBS(data, 1, p = dib.par)
-      dib.comp <- compareGraphs(dib.fit, truegraph)
-      results <- rbind(results, c(as.character(dib.comp), dib.par, "DiBS+", lambda))
+      dib.fit <- DiBS(data, par = dib.par)
+      results <- compare_results(dib.fit, c(dib.par, "DiBS+", lambda), results, truegraph)
       
       # k-PC, distance correlation
-      kPC.dcc.fit <- kPC.dcc.boot(data, nboots = 10, alpha = pc.par)
-      kPC.dcc.comp <- compareGraphs(kPC.dcc.fit, truegraph)
-      results <- rbind(results, c(as.character(kPC.dcc.comp), pc.par, "kPC-DC", lambda))
+      kPC.dcc.fit <- kPC.dcc.boot(data, nboots = 100, alpha = pc.par)
+      results <- compare_results(kPC.dcc.fit, c(pc.par, "kPC-DC", lambda), results, truegraph)
       
       # k-PC, HSIC
-      kPC.hsic.fit <- kPC.hsic.boot(data, nboots = 10, alpha = pc.par)
-      kPC.hsic.comp <- compareGraphs(kPC.hsic.fit, truegraph)
-      results <- rbind(results, c(as.character(kPC.hsic.comp), pc.par, "kPC-HSIC", lambda))
+      kPC.hsic.fit <- kPC.hsic.boot(data, nboots = 100, alpha = pc.par)
+      results <- compare_results(kPC.hsic.fit, c(pc.par, "kPC-HSIC", lambda), results, truegraph)
+      
+      cat("k =",k,", i =",i,"\n")
     }
   }
+  saveRDS(results, paste0("Sims_Results_l=",lambda,".rds"))
 }
-colnames(results) <- c("ESHD", "TPR", "FPRn", "parameter", "Scorefn", "Lambda")
-saveRDS(results, "Results/Sims_Results.rds")
+colnames(results) <- c("ESHD", "eTP", "eFP", "TPR", "FPR_P", 
+                       "time", "parameter", "method", "lambda", "graph")
+saveRDS(results, "Sims_Results.rds")
+
+# filename <- file.choose()
+# results <- readRDS(filename)

@@ -4,7 +4,6 @@ options(mc.cores = parallel::detectCores())
 
 # Compile stan files
 Gauss_mod <- stan_model("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Gauss.stan") 
-GP_mod <- stan_model("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Add.stan") 
 GP_int_mod <- stan_model("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Add_interact.stan") 
 
 # Laplace approximation of log marginal likelihood
@@ -29,8 +28,8 @@ GP.lap <- function(y, X, interact = FALSE) {
   d <- ncol(X)
   Sdata <- list(N_obs = nrow(X), d = d, X = X, y_obs = y)
   
-  init <- list(rho = as.array(rep(1, d)), mu = 0, sigma = 0.5)
-  opt <- optimizing(GP_mod, data = Sdata, init = init, hessian = T)
+  init <- list(rho = as.array(rep(1, d)), var1 = 1, var2 = 1, mu = 0, sigma = 0.5)
+  opt <- optimizing(GP_int_mod, data = Sdata, init = init, hessian = T)
   Laplace(opt)
 }
 
@@ -38,8 +37,8 @@ GP.lap <- function(y, X, interact = FALSE) {
 Gauss.mcmc <- function(y) {
   N <- length(y)
   stanfit <- sampling(Gauss_mod, data = list(N_obs = N, y_obs = y), 
-                      iter = 500, warmup = 200, chains = 1, refresh = 0)
-  bridge_sampler(stanfit, silent = TRUE)$logml
+                      iter = 300, warmup = 150, chains = 1, refresh = 0)
+  bridge_sampler(stanfit, silent = TRUE, maxiter = 100)$logml
 }
 
 GP.mcmc <- function(y, X, interact = FALSE) { 
@@ -47,7 +46,8 @@ GP.mcmc <- function(y, X, interact = FALSE) {
   X <- as.matrix(X)
   d <- ncol(X)
   
-  stanfit <- sampling(GP_mod, data = list(N_obs = N, d = d, X = X, y_obs = y),  
-                      iter = 500, warmup = 200, chains = 1, refresh = 0)
-  bridge_sampler(stanfit, silent = TRUE)$logml
+  stanfit <- sampling(GP_int_mod, data = list(N_obs = N, d = d, X = X, y_obs = y),  
+                      iter = 300, warmup = 150, chains = 1, refresh = 0)
+  
+  bridge_sampler(stanfit, silent = TRUE, maxiter = 100)$logml
 }
