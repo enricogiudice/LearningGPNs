@@ -1,12 +1,12 @@
 library(BiDAG)
 library(matrixStats)
 
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Fourier_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/BayesStanFns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/sampling_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/comparison_algs.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/dualPC.R")
-insertSource("~/Downloads/Nonlinear scoring/Structure Learning/GPscore.R", package = "BiDAG")
+source("Fourier_fns.R")
+source("BayesStanFns.R")
+source("sampling_fns.R")
+source("comparison_algs.R")
+source("dualPC.R")
+insertSource("GPscore.R", package = "BiDAG")
 
 init.seed <- 100
 iter <- 100  # number of simulations
@@ -80,15 +80,9 @@ for(lambda in lambdas) {
       # k-PC, HSIC
       kPC.hsic.fit <- kPC.hsic.boot(data, nboots = 100, alpha = pc.par)
       results <- compare_results(kPC.hsic.fit, c(pc.par, "kPC-HSIC", lambda), results, truegraph)
-      
-      cat("k =",k,", i =",i,"\n")
     }
   }
-  saveRDS(results, paste0("Sims_Results_l=",lambda,".rds"))
 }
 colnames(results) <- c("ESHD", "eTP", "eFP", "TPR", "FPR_P", 
                        "time", "parameter", "method", "lambda", "graph")
 saveRDS(results, "Sims_Results.rds")
-
-# filename <- file.choose()
-# results <- readRDS(filename)
