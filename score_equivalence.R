@@ -2,11 +2,11 @@
 library(tidyverse)
 library(BiDAG)
 
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Fourier_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/BayesStanFns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/sampling_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/dualPC.R")
-insertSource("~/Downloads/Nonlinear scoring/Structure Learning/GPscore.R", package = "BiDAG")
+source("Fourier_fns.R")
+source("BayesStanFns.R")
+source("sampling_fns.R")
+source("dualPC.R")
+insertSource("GPscore.R", package = "BiDAG")
 
 # Compute score of DAG
 GPscoreDAG <- function(dag, data) {
