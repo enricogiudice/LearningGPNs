@@ -1,6 +1,7 @@
 library(kpcalg)
 
-kPC.dcc.boot <- function(data, nboots = 100, alpha = 0.1) {  # k-PC with distance correlation
+# k-PC with distance correlation
+kPC.dcc.boot <- function(data, nboots = 100, alpha = 0.1) {  
   start <- Sys.time()
   mats <- list()  # to store sampled graphs
   N <- nrow(data)
@@ -21,7 +22,8 @@ kPC.dcc.boot <- function(data, nboots = 100, alpha = 0.1) {  # k-PC with distanc
               time = as.numeric(time, units = "secs")))
 }
 
-kPC.hsic.boot <- function(data, nboots = 100, alpha = 0.1) {  # k-PC with hsic
+# k-PC with hsic
+kPC.hsic.boot <- function(data, nboots = 100, alpha = 0.1) {  
   start <- Sys.time()
   mats <- list()  
   N <- nrow(data)
@@ -49,7 +51,7 @@ DiBS <- function(data, n_particles = 1, par = 1) {
   py.args <- paste(str_data, n, n_particles, par)
   
   path <- NULL  # to run on server
-  path <- 'cd "/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning";'
+  path <- 'cd "<path>";'
   
   asvec <- system(paste(path, 'python3 algo_dibs.py', py.args), intern = T)
   asnum <- as.numeric(strsplit(asvec, "")[[1]])
@@ -100,7 +102,7 @@ compare_results <- function(fit, method_vec, result_df, trueDAG) {
   return(result_df)
 }
 
-# Compare the fit to the truth
+# Compare the fit to the true graph
 compareFit <- function(graphlist, MAPgraph, time, truegraph, weights = NULL) {
   SHD <- vector()
   TP <- vector()
