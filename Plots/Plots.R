@@ -38,7 +38,7 @@ for(i in 1:length(lambdas)) {
                 filter(method %in% some_methods), 
               aes(x = FPRp, y = TPR, colour = method), size = 0.6) +
     ggtitle(bquote(lambda ~ "=" ~ .(lambdas[i]))) +
-  coord_fixed(ratio = 1, xlim = c(0, 0.45), ylim = c(0.4, 1), expand = FALSE) +  # try unfixing the ratio
+  coord_fixed(ratio = 1, xlim = c(0, 0.45), ylim = c(0.4, 1), expand = FALSE) +  
     theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank()) +
   scale_color_manual(values=c("#9bb658","#58b6b6","#5866b6","#9b58b6"))
 
@@ -57,7 +57,7 @@ for(i in 1:length(lambdas)) {
     xlab("") +
     ylab("E-SHD") +
     theme_light() +
-    ylim(c(0, 16)) +
+    ylim(c(0, 16)) +  # 30 for n = 15
     theme(legend.position="bottom", legend.title = element_blank(),
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
           plot.title = element_text(hjust = 0.5)) + guides(color = guide_legend(nrow = 1))
@@ -73,7 +73,7 @@ for(i in 1:length(lambdas)) {
     xlab("") +
     ylab("Time (s)") +
     theme_light() +
-    scale_y_continuous(trans = "log10", limits = c(1, 1200)) +
+    scale_y_continuous(trans = "log10", limits = c(1, 2200)) +
     theme(legend.position="none", legend.title = element_blank(),
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
           plot.title = element_text(hjust = 0.5)) + guides(color = guide_legend(nrow = 1))
