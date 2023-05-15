@@ -87,7 +87,7 @@ all.dags <- all.dags[true.order]
 # Estimate posterior via order GP sampling
 toburn <- 250
 GP.searchspace <- set.searchspace(data, dual = T, "GP", alpha = 0.3)
-iters <- c(30e1, 44e1, 65e1, 96e1, 14e2, 21e2, 31e2, 46e2, 67e2, 10e3)  # could do more...
+iters <- c(30e1, 44e1, 65e1, 96e1, 14e2, 21e2, 31e2, 46e2, 67e2, 10e3)
 results <- data.frame()
 
 for(i in 1:length(iters)) {
