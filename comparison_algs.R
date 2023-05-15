@@ -50,8 +50,7 @@ DiBS <- function(data, n_particles = 1, par = 1) {
   str_data <- paste(signif(data, 5), collapse = ",")  # convert to strings
   py.args <- paste(str_data, n, n_particles, par)
   
-  path <- NULL  # to run on server
-  path <- 'cd "<path>";'
+  path <- NULL  # path to algo_dibs.py
   
   asvec <- system(paste(path, 'python3 algo_dibs.py', py.args), intern = T)
   asnum <- as.numeric(strsplit(asvec, "")[[1]])
