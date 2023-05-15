@@ -114,12 +114,8 @@ bge.partition.mcmc <- function(searchspace, alpha = 0.05,
 }
 
 GP.partition.inter <- function(data, dual, order = F, par = 1) {
-  
-  start <- Sys.time()
   GP.searchspace = set.searchspace(data, dual, "GP", par = par)
   gp.fit <-  GP.partition.mcmc(data, GP.searchspace, order = order, iterations = 1200)
-  time <- Sys.time() - start
-  gp.fit$time <- as.numeric(time, units = "secs")
 
   return(gp.fit)
 }
