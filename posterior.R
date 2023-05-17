@@ -4,11 +4,11 @@ library(matrixStats)
 library(questionr)
 library(ggpubr)
 library(cowplot)
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/Fourier_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/BayesStanFns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/sampling_fns.R")
-source("/Users/giudic0000/Downloads/Nonlinear scoring/Structure Learning/dualPC.R")
-insertSource("~/Downloads/Nonlinear scoring/Structure Learning/GPscore.R", package = "BiDAG")
+source("Fourier_fns.R")
+source("BayesStanFns.R")
+source("sampling_fns.R")
+source("dualPC.R")
+insertSource("GPscore.R", package = "BiDAG")
 
 KL_div <- function(est.post, est.ind, p) {  # reverse KL divergence
   q <- rep(NA, length(p))
@@ -77,7 +77,6 @@ for(k in 1:dag.counter) {
     curr_score <- curr_score + loc_score  # build score
   }
   true.post[k] <- curr_score
-  if(k%%45==0){cat(round(k*100/dag.counter),"%\n")}
 }
 
 # Order true posterior
@@ -186,29 +185,3 @@ post_plots[[2]] <- ggdraw() +
 ggarrange(post_plots[[1]], post_plots[[2]], ncol = 2, widths = c(1, 2), 
           common.legend = T, legend = "bottom")
 # size = 3.3 x 9
-
-
-# GAP
-library(gg.gap)
-post_plot <- ggplot() +
-  geom_bar(data = data.frame(x = 1:dag.counter, y = true.p), aes(x,y), 
-           stat = 'identity', width = 0.43, fill = "#bdbdbd") +
-  geom_point(data = post_data, aes(x, y, shape = group, color = group), size = 1) +
-  scale_shape_manual(values = c(2, 4, 3)) +
-  scale_color_manual(values = color3) +
-  xlab("DAG") + ylab("Posterior probability") +
-  theme_light() +
-  theme(legend.title = element_blank(), legend.position = "none",
-        panel.background = element_rect(fill = "white"), 
-        panel.grid = element_blank(),
-        axis.line = element_blank()) +
-  scale_y_sqrt() 
-
-post_plot %>% 
-  gg.gap(xlim = c(1, dag.counter), segments = list(c(523,201)), 
-         tick_width = 200)
-
-
-
-
-
