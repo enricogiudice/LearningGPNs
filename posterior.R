@@ -185,3 +185,62 @@ post_plots[[2]] <- ggdraw() +
 ggarrange(post_plots[[1]], post_plots[[2]], ncol = 2, widths = c(1, 2), 
           common.legend = T, legend = "bottom")
 # size = 3.3 x 9
+
+
+# K-L vs runtimes plot
+KL_time <- function(fit, all.vecdags, true.p, weights = NULL) {
+  sampled_dags <- fit$traceadd$incidence
+  post.indexes <- sapply(sampled_dags, function(x) which(all.vecdags %in% list(as.numeric(x))))
+  
+  if(is.null(weights)) {
+    tab <- table(post.indexes)  # unlist
+  }
+  
+  else {
+  tab <- wtd.table(post.indexes, weights = exp(weights))
+  }
+  post <- as.numeric(tab)/sum(tab)
+  est.ind <- as.numeric(names(tab))
+  kl <- KL_div(post, est.ind, true.p)
+  
+  return(c(fit$time, kl))
+}
+
+dib.samples <- c(1, 3, 10, 30, 100, 200, 300, 600, 1000)  
+bge.samples <- c(1e03, 3e03, 1e04, 3e04, 1e05, 3e05, 1e06, 3e06, 1e07)
+gp.samples <- bge.samples/10
+time_res <- data.frame()
+bge.searchspace <- set.searchspace(data, dual, "bge")
+GP.searchspace <- set.searchspace(data, dual, "GP")
+
+for(i in 1:length(gp.samples)) {
+  dib.fit <- DiBS(data, dib.samples[i])
+  time_res <- rbind(time_res, c(KL_time(dib.fit, all.vecdags, true.p), "DiBS+"))
+  
+  bge.fit <- bge.partition.mcmc(bge.searchspace, order = F, 
+                                burnin = 0.2, iterations = bge.samples[i])
+  time_res <- rbind(time_res, c(KL_time(bge.fit, all.vecdags, true.p), "BGe"))
+  
+  GP.fit <- GP.partition.mcmc(data, GP.searchspace, order = F, 
+                                burnin = 0.2, iterations = gp.samples[i])
+  time_res <- rbind(time_res, c(KL_time(GP.fit, all.vecdags, true.p, weights = GP.fit$weights),
+                                "GP"))
+}
+colnames(time_res) <- c("time", "kl", "method")
+time_res %>% mutate(time = as.numeric(time),
+                    kl = as.numeric(kl),
+                    method = factor(method)) -> time_res
+
+ggplot(time_res, aes(x = time, y = kl, group = method)) +
+  geom_line(aes(linetype = method)) +
+  geom_point(aes(shape = method, color = method)) +
+  scale_shape_manual(values = c(2, 4, 3)) +
+  scale_color_manual(values = c('#00c700','#ff38a2','#db0000')) +
+  scale_linetype_manual(values = c("twodash", "dashed", "dotdash")) +
+  scale_x_continuous(trans = 'log10') +
+  scale_y_continuous(trans = 'log10') +
+  xlab("Time (s)") + ylab("Reverse K-L divergence") +
+  theme_light() +
+  theme(legend.title = element_blank())
+
+# size = 3 x 6
