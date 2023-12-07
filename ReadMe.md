@@ -1,3 +1,5 @@
+This repository contains all the code to reproduce the results in [A Bayesian Take on Gaussian Process Networks](https://arxiv.org/abs/2306.11380).
+
 Results/ contains the collected data from the GP_sims.R and Sachs.R;
 Plots/ contains all generated plots and the code used to create Figures 1, A2, A3, A4, A6, A7 & A8.
 
