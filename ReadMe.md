@@ -14,16 +14,17 @@ The .Stan files contain code for the Gaussian (Gauss.stan), GP (Add.stan) and GP
 - sampling_fns.R contains the main functions for BGe & GP score-based structure learning.
 - score_equivalence.R generates Figure A1.
 
-Example
+Toy example
 -------
 
 ```
-require(BiDAG, matrixStats)
+require(BiDAG, matrixStats, datasets)
 source("BayesStanFns.R")
 source("sampling_fns.R")
 
-GPspace <- set.searchspace(Boston, dual = F, method = "GP")
-GP.fit <- GP.partition.mcmc(Boston, GPspace)
+set.seed(101)
+GPspace <- set.searchspace(trees, dual = F, method = "GP")
+GP.fit <- GP.partition.mcmc(trees, GPspace)
 ```
 Reference
 ---------
