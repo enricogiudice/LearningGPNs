@@ -1,4 +1,4 @@
-This repository contains all the code to reproduce the results in [A Bayesian Take on Gaussian Process Networks](https://arxiv.org/abs/2306.11380).
+This repository contains all the code to reproduce the results in [A Bayesian Take on Gaussian Process Networks](https://papers.nips.cc/paper_files/paper/2023/hash/b146e7c87685fa208bd95ce4b08e330c-Abstract-Conference.html).
 
 - Results/ contains the collected data from the GP_sims.R and Sachs.R.
 - Plots/ contains all generated plots and the code used to create Figures 1, 2, A2, A3, A7, A8, & A9.
@@ -14,3 +14,18 @@ The .Stan files contain code for the Gaussian (Gauss.stan), GP (Add.stan) and GP
 - sampling_fns.R contains the main functions for BGe & GP score-based structure learning.
 - score_equivalence.R generates Figure A1.
 
+Reference
+---------
+
+```
+@article{GIUDICE2023108975,
+title = {The dual PC algorithm and the role of Gaussianity for structure learning of Bayesian networks},
+journal = {International Journal of Approximate Reasoning},
+volume = {161},
+pages = {108975},
+year = {2023},
+doi = {https://doi.org/10.1016/j.ijar.2023.108975},
+url = {https://www.sciencedirect.com/science/article/pii/S0888613X23001068},
+author = {Enrico Giudice and Jack Kuipers and Giusi Moffa}
+}
+```
