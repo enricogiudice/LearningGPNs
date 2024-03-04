@@ -14,7 +14,7 @@ The .Stan files contain code for the Gaussian (Gauss.stan), GP (Add.stan) and GP
 - sampling_fns.R contains the main functions for BGe & GP score-based structure learning.
 - score_equivalence.R generates Figure A1.
 
-Toy example
+Example
 -------
 
 ```
